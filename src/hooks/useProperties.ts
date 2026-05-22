@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { Property, FilterState } from '../types'
+import type { Property } from '../types'
 import { fetchProperties, fetchPropertyById } from '../lib/notion'
 
 export function useProperties() {
