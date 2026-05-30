@@ -28,7 +28,7 @@ export default function PropertyDetail() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-5 py-10">
+    <div className="max-w-5xl mx-auto px-4 py-8 overflow-x-hidden">
       <Link to="/properti"
         className="text-sm text-gray-400 hover:text-green-600 flex items-center gap-1 mb-6">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -37,12 +37,13 @@ export default function PropertyDetail() {
         Kembali
       </Link>
 
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-3 gap-6">
         {/* Kiri */}
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 min-w-0">
 
           {/* Foto Utama */}
-          <div className="relative rounded-2xl overflow-hidden bg-gray-100 mb-3" style={{ height: 380 }}>
+          <div className="relative rounded-2xl overflow-hidden bg-gray-100 mb-3 w-full"
+            style={{ height: 300 }}>
             <img
               src={p.images[activeImg]}
               alt={p.title}
@@ -89,29 +90,51 @@ export default function PropertyDetail() {
             )}
           </div>
 
-          {/* Thumbnail Strip */}
+          {/* Thumbnail Strip — fix scroll horizontal */}
           {p.images.length > 1 && (
-            <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+            <div
+              className="mb-6"
+              style={{
+                display: "flex",
+                gap: 8,
+                overflowX: "auto",
+                overflowY: "hidden",
+                paddingBottom: 4,
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                WebkitOverflowScrolling: "touch",
+              }}
+            >
               {p.images.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveImg(i)}
-                  className={`shrink-0 w-20 h-16 rounded-xl overflow-hidden border-2 transition-all ${
-                    activeImg === i
-                      ? "border-green-500 opacity-100"
-                      : "border-transparent opacity-60 hover:opacity-100"
-                  }`}
+                  style={{
+                    flexShrink: 0,
+                    width: 72,
+                    height: 56,
+                    borderRadius: 10,
+                    overflow: "hidden",
+                    border: activeImg === i ? "2px solid #16A34A" : "2px solid transparent",
+                    opacity: activeImg === i ? 1 : 0.6,
+                    cursor: "pointer",
+                    padding: 0,
+                    background: "none",
+                    transition: "all 0.2s",
+                  }}
                 >
-                  <img src={img} alt={`foto ${i + 1}`} className="w-full h-full object-cover" />
+                  <img
+                    src={img}
+                    alt={`foto ${i + 1}`}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
                 </button>
               ))}
             </div>
           )}
 
           {/* Judul */}
-          <div className="flex items-start gap-3 mb-2">
-            <h1 className="text-xl font-bold text-gray-900 flex-1">{p.title}</h1>
-          </div>
+          <h1 className="text-xl font-bold text-gray-900 mb-2 pr-2">{p.title}</h1>
           <p className="text-gray-400 text-sm flex items-center gap-1 mb-6">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
@@ -120,8 +143,8 @@ export default function PropertyDetail() {
             {p.location}, {p.city}
           </p>
 
-          {/* Spesifikasi */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          {/* Spesifikasi — 2 kolom di mobile, 4 di desktop */}
+          <div className="grid grid-cols-2 gap-2.5 mb-6">
             {[
               ["Tipe", p.type],
               ["Luas Tanah", `${p.landArea} m²`],
@@ -134,7 +157,7 @@ export default function PropertyDetail() {
             ].map(([label, val]) => (
               <div key={label} className="bg-gray-50 rounded-xl p-3">
                 <p className="text-xs text-gray-400 mb-0.5">{label}</p>
-                <p className="text-sm font-medium text-gray-800">{val}</p>
+                <p className="text-sm font-medium text-gray-800 truncate">{val}</p>
               </div>
             ))}
           </div>
@@ -147,8 +170,9 @@ export default function PropertyDetail() {
         </div>
 
         {/* Kanan — harga & kontak */}
-        <div>
-          <div className="bg-white rounded-2xl border border-gray-100 p-5 sticky top-20">
+        {/* Di mobile tampil di bawah konten, di desktop sticky di kanan */}
+        <div className="md:block">
+          <div className="bg-white rounded-2xl border border-gray-100 p-5 md:sticky md:top-20">
             <p className="text-xs text-gray-400 mb-1">Harga</p>
             <p className="text-2xl font-bold text-green-600 mb-1">{p.priceLabel}</p>
             <p className="text-xs text-gray-400 mb-5">{p.type} · {p.certificate}</p>
@@ -173,6 +197,7 @@ export default function PropertyDetail() {
               </svg>
               Chat WhatsApp
             </a>
+            
             <a
               href={`tel:+${p.agentPhone}`}
               className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm"
@@ -180,7 +205,6 @@ export default function PropertyDetail() {
               Telepon Agen
             </a>
 
-            {/* Share */}
             <button
               onClick={() => navigator.clipboard.writeText(window.location.href).then(() => alert('Link disalin!'))}
               className="w-full flex items-center justify-center gap-2 mt-3 text-xs text-gray-400 hover:text-gray-600 transition-colors"
