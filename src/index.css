@@ -2,7 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Sembunyikan scrollbar tapi tetap bisa scroll */
-.thumbnail-strip::-webkit-scrollbar {
-  display: none;
-}
